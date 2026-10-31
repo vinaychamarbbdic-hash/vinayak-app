@@ -7,12 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build APK
-        uses: ArtemSBulgakov/buildozer-action@v1
+      - uses: actions/setup-python@v5
         with:
-          command: buildozer android debug
-          workdir: .
-          buildozer_version: stable
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y python3-pip openjdk-17-jdk unzip zip libncurses6 libstdc++6 zlib1g
+          pip install --upgrade pip
+          pip install buildozer cython
+      - name: Build APK
+        run: |
+          buildozer android debug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
